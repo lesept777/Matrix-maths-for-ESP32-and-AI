@@ -16,7 +16,7 @@ MLMatrix<T>::MLMatrix() {
 template<typename T>
 MLMatrix<T>::MLMatrix(unsigned _rows, unsigned _cols, const T& _initial) {
   mat.resize(_rows);
-  for (unsigned i=0; i<mat.size(); i++) {
+  for (unsigned i=0; i<mat.size(); ++i) {
     mat[i].resize(_cols, _initial);
   }
   rows = _rows;
@@ -37,7 +37,7 @@ MLMatrix<T>::MLMatrix(const MLMatrix<T>& rhs, const T& _initial) {
   rows = rhs.get_rows();
   cols = rhs.get_cols();
   mat.resize(rows);
-  for (unsigned i=0; i<mat.size(); i++) {
+  for (unsigned i=0; i<mat.size(); ++i) {
     mat[i].resize(cols, _initial);
   }
 }
@@ -46,7 +46,7 @@ template<typename T>
 MLMatrix<T>::MLMatrix(const std::vector<T>& rhs) {
   rows = rhs.size();
   cols = 1;
-  for (unsigned i=0; i<rows; i++)
+  for (unsigned i=0; i<rows; ++i)
     mat[i][0] = rhs[i];
 }
 
@@ -62,9 +62,9 @@ template <typename T>
 MLMatrix<T>::MLMatrix(unsigned _rows, unsigned _cols, const T min, const T max)
 {
   mat.resize(_rows);
-  for (unsigned i=0; i<mat.size(); i++) {
+  for (unsigned i=0; i<mat.size(); ++i) {
     mat[i].resize(_cols);
-    for (unsigned j=0; j<mat[i].size(); j++) {
+    for (unsigned j=0; j<mat[i].size(); ++j) {
       if (std::is_floating_point<T>::value) { // float
         float x = esp_random();
         x /= UINT32_MAX;
@@ -95,12 +95,12 @@ MLMatrix<T>& MLMatrix<T>::operator=(const MLMatrix<T>& rhs) {
   unsigned new_cols = rhs.get_cols();
 
   mat.resize(new_rows);
-  for (unsigned i=0; i<mat.size(); i++) {
+  for (unsigned i=0; i<mat.size(); ++i) {
     mat[i].resize(new_cols);
   }
 
-  for (unsigned i=0; i<new_rows; i++) {
-    for (unsigned j=0; j<new_cols; j++) {
+  for (unsigned i=0; i<new_rows; ++i) {
+    for (unsigned j=0; j<new_cols; ++j) {
       mat[i][j] = rhs(i, j);
     }
   }
@@ -121,7 +121,7 @@ MLMatrix<T>& MLMatrix<T>::operator=(const std::vector<T>& rhs) {
   mat[0].resize(new_rows);
 */
   mat.resize(new_rows);
-  for (unsigned i=0; i<new_rows; i++) mat[i][0] = rhs[i];
+  for (unsigned i=0; i<new_rows; ++i) mat[i][0] = rhs[i];
   rows = new_rows;
   cols = new_cols;
 
@@ -135,7 +135,7 @@ MLMatrix<T>& MLMatrix<T>::operator=(const T rhs[]) {
   unsigned new_cols = 1;
 
   mat.resize(new_rows);
-  for (unsigned i=0; i<new_rows; i++) mat[i][0] = rhs[i];
+  for (unsigned i=0; i<new_rows; ++i) mat[i][0] = rhs[i];
   rows = new_rows;
   cols = new_cols;
 
@@ -156,8 +156,8 @@ MLMatrix<T> MLMatrix<T>::operator+(const MLMatrix<T>& rhs) const {
 
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] + rhs(i,j);
     }
   }
@@ -175,8 +175,8 @@ MLMatrix<T>& MLMatrix<T>::operator+=(const MLMatrix<T>& rhs) {
   unsigned rows = rhs.get_rows();
   unsigned cols = rhs.get_cols();
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] += rhs(i,j);
     }
   }
@@ -195,8 +195,8 @@ MLMatrix<T> MLMatrix<T>::operator-(const MLMatrix<T>& rhs) const {
   unsigned cols = rhs.get_cols();
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] - rhs(i,j);
       // result(i,j) = mat[i][j] - rhs(i,j);
     }
@@ -215,8 +215,8 @@ MLMatrix<T>& MLMatrix<T>::operator-=(const MLMatrix<T>& rhs) {
   unsigned rows = rhs.get_rows();
   unsigned cols = rhs.get_cols();
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] -= rhs(i,j);
     }
   }
@@ -235,8 +235,8 @@ MLMatrix<T> MLMatrix<T>::operator*(const MLMatrix<T>& rhs) const {
   unsigned cols = rhs.get_cols();
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       for (unsigned k=0; k<rhs.get_rows(); k++) {
         result(i,j) += this->mat[i][k] * rhs(k,j);
       }
@@ -263,8 +263,8 @@ template<typename T>
 MLMatrix<T> MLMatrix<T>::transpose() {
   MLMatrix result(cols, rows, 0);
 
-  for (unsigned i=0; i<cols; i++) {
-    for (unsigned j=0; j<rows; j++) {
+  for (unsigned i=0; i<cols; ++i) {
+    for (unsigned j=0; j<rows; ++j) {
       result(i,j) = this->mat[j][i];
     }
   }
@@ -280,8 +280,8 @@ MLMatrix<T> MLMatrix<T>::operator+(const T& rhs) {
   }
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] + rhs;
     }
   }
@@ -296,8 +296,8 @@ MLMatrix<T>& MLMatrix<T>::operator+=(const T& rhs) {
     while(1);
   }
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] += rhs;
     }
   }
@@ -313,8 +313,8 @@ MLMatrix<T> MLMatrix<T>::operator-(const T& rhs) {
   }
 
   MLMatrix result(rows, cols, 0);
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] - rhs;
     }
   }
@@ -329,8 +329,8 @@ MLMatrix<T>& MLMatrix<T>::operator-=(const T& rhs) {
     while(1);
   }
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] -= rhs;
     }
   }
@@ -342,8 +342,8 @@ template<typename T>
 MLMatrix<T> MLMatrix<T>::operator*(const T& rhs) {
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] * rhs;
     }
   }
@@ -355,8 +355,8 @@ template<typename T>
 MLMatrix<T>& MLMatrix<T>::operator*=(const T& rhs) {
   // MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] *= rhs;
     }
   }
@@ -372,9 +372,8 @@ MLMatrix<T> MLMatrix<T>::operator/(const T& rhs) {
   }
 
   MLMatrix result(rows, cols, 0);
-
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = this->mat[i][j] / rhs;
     }
   }
@@ -391,8 +390,8 @@ MLMatrix<T>& MLMatrix<T>::operator/=(const T& rhs) {
 
   // MLMatrix<T> result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       this->mat[i][j] /= rhs;
     }
   }
@@ -408,9 +407,8 @@ std::vector<T> MLMatrix<T>::operator*(const std::vector<T>& rhs) {
   }
 
   std::vector<T> result(rhs.size(), 0);
-
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result[i] += this->mat[i][j] * rhs[j];
     }
   }
@@ -441,8 +439,8 @@ const bool MLMatrix<T>::operator==( const MLMatrix<T> &rhs ) const
 {
   if ( rows != rhs.rows || cols != rhs.cols ) return false; // matrices of different sizes
 
-  for ( unsigned i = 0; i < rows; i++ )
-    for ( unsigned j = 0; j < cols; j++ )
+  for ( unsigned i = 0; i < rows; ++i )
+    for ( unsigned j = 0; j < cols; ++j )
       if ( this->mat[i][i] != rhs.mat[i][i] ) return false; 
   return true; // matrices are equal
 }
@@ -462,8 +460,8 @@ MLMatrix<T> MLMatrix<T>::operator<( const MLMatrix<T> &rhs )
     while(1);
   }
   MLMatrix result(rows, cols, 0);
-  for ( unsigned i = 0; i < rows; i++ )
-    for ( unsigned j = 0; j < cols; j++ )
+  for ( unsigned i = 0; i < rows; ++i )
+    for ( unsigned j = 0; j < cols; ++j )
       result(i,j) = T(mat[i][j] < rhs.mat[i][j] ? true : false); 
   return result;
 }
@@ -476,8 +474,8 @@ MLMatrix<T> MLMatrix<T>::operator>=( const MLMatrix<T> &rhs )
     while(1);
   }
   MLMatrix result(rows, cols, 0);
-  for ( unsigned i = 0; i < rows; i++ )
-    for ( unsigned j = 0; j < cols; j++ )
+  for ( unsigned i = 0; i < rows; ++i )
+    for ( unsigned j = 0; j < cols; ++j )
       result(i,j) = T(mat[i][j] >= rhs.mat[i][j] ? true : false); 
   return result;
 }
@@ -516,7 +514,7 @@ void MLMatrix<T>::print()
 template <typename T>
 void MLMatrix<T>::printSize()
 {
-  Serial.printf("(%d, %d)\n",rows, cols);
+  Serial.printf("(%d, %d)",rows, cols);
 }
 
 // Find the place of the minimum value
@@ -556,7 +554,7 @@ template<typename T>
 std::vector<T> MLMatrix<T>::diag_vec() {
   std::vector<T> result(rows, 0);
 
-  for (unsigned i=0; i<rows; i++) {
+  for (unsigned i=0; i<rows; ++i) {
     result[i] = this->mat[i][i];
   }
   return result;
@@ -618,14 +616,14 @@ MLMatrix<T> MLMatrix<T>::times(const MLMatrix<T>& rhs, bool clip)
   MLMatrix result(rows, rows2, 0);
 
   if (! clip) {
-    for (unsigned i=0; i<rows; i++) {
-      for (unsigned j=0; j<rows2; j++) {
+    for (unsigned i=0; i<rows; ++i) {
+      for (unsigned j=0; j<rows2; ++j) {
         result(i,j) = std::inner_product(std::begin(mat[i]), std::end(mat[i]), std::begin(rhs.mat[j]), 0);
       }
     }
   }else {
-    for (unsigned i=0; i<rows; i++) {
-      for (unsigned j=0; j<rows2; j++) {
+    for (unsigned i=0; i<rows; ++i) {
+      for (unsigned j=0; j<rows2; ++j) {
         float R = std::inner_product(std::begin(mat[i]), std::end(mat[i]), std::begin(rhs.mat[j]), 0);
         if (R < std::numeric_limits<T>::min()) R = std::numeric_limits<T>::min();
         if (R > std::numeric_limits<T>::max()) R = std::numeric_limits<T>::max();
@@ -654,12 +652,12 @@ MLMatrix<T> MLMatrix<T>::Hadamard(const MLMatrix<T>& rhs, bool clip)
   MLMatrix result(rows, cols, 0);
 
   if (!clip) {
-    for ( unsigned i = 0; i < rows; i++ )
-      for ( unsigned j = 0; j < cols; j++ )
+    for ( unsigned i = 0; i < rows; ++i )
+      for ( unsigned j = 0; j < cols; ++j )
         result(i,j) = mat[i][j] * rhs.mat[i][j];
   } else {
-    for ( unsigned i = 0; i < rows; i++ )
-      for ( unsigned j = 0; j < cols; j++ ) {
+    for ( unsigned i = 0; i < rows; ++i )
+      for ( unsigned j = 0; j < cols; ++j ) {
         float R = mat[i][j] * rhs.mat[i][j];
         if (R < std::numeric_limits<T>::min()) R = std::numeric_limits<T>::min();
         if (R > std::numeric_limits<T>::max()) R = std::numeric_limits<T>::max();
@@ -684,8 +682,8 @@ MLMatrix<T> MLMatrix<T>::Hadamard(const MLMatrix<T>& rhs, bool clip)
 template<typename T>
 MLMatrix<T> MLMatrix<T>::applySelf(T (*function)(T))
 {
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       mat[i][j] = function(mat[i][j]);
     }
   }
@@ -697,8 +695,8 @@ MLMatrix<T> MLMatrix<T>::apply(T (*function)(T))
 {
   MLMatrix result(rows, cols, 0);
 
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       result(i,j) = function(this->mat[i][j]);
     }
   }
@@ -717,8 +715,8 @@ template<typename T>
 T MLMatrix<T>::L2Norm()
 {
   T L2 = T(0);
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       L2 += pow(this->mat[i][j], 2);
     }
   }
@@ -729,8 +727,8 @@ template<typename T>
 T MLMatrix<T>::L1Norm()
 {
   T L1 = T(0);
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       float L = abs(this->mat[i][j]);
       L1 = (L > L1)? L: L1;
     }
@@ -742,8 +740,8 @@ template<typename T>
 int MLMatrix<T>::L0Norm() // number of non zero elements
 {
   int L0 = 0;
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       if (this->mat[i][j] != 0) ++L0;
     }
   }
@@ -755,8 +753,8 @@ template<typename T>
 T MLMatrix<T>::max() const
 {
   T max = std::numeric_limits<T>::min();
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       if (this->mat[i][j] > max) max = this->mat[i][j];
     }
   }
@@ -767,8 +765,8 @@ template<typename T>
 T MLMatrix<T>::min() const
 {
   T min = std::numeric_limits<T>::max();
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       if (this->mat[i][j] < min) min = this->mat[i][j];
     }
   }
@@ -779,8 +777,8 @@ template<typename T>
 float MLMatrix<T>::mean() const
 {
   float mean = 0.0f;
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       mean += this->mat[i][j];
     }
   }
@@ -792,8 +790,8 @@ template<typename T>
 float MLMatrix<T>::stdev(const float mean) const
 {
   float stdev = 0.0f;
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
       stdev += pow(this->mat[i][j] - mean, 2);
     }
   }
@@ -802,24 +800,77 @@ float MLMatrix<T>::stdev(const float mean) const
   return stdev;
 }
 
-// Clip all values less than threshold to zero
+// Scale the norm to a given value
+// usage: Y = X.normScale(val, zeroNorm);
 template <typename T>
-void MLMatrix<T>::clipMin (const float threshold)
+MLMatrix<T> MLMatrix<T>::normScale (float value, bool & zeroNorm)
 {
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
-      if (this->mat[i][j] < threshold) this->mat[i][j] = 0.0f;
+  zeroNorm = false;
+  value = abs(value);
+  MLMatrix result(rows, cols, 0);
+  for (unsigned i=0; i<rows; ++i)
+    for (unsigned j=0; j<cols; ++j) {
+      result(i,j) = this->mat[i][j];
+    }
+  float L2 = result.L2Norm();
+  if (L2 != 0.0f) result = result / L2 * value;
+  else zeroNorm = true;
+  return result;
+}
+
+// Scale the norm to a given value
+// usage: X.normScale2(val, zeroNorm);
+template <typename T>
+void MLMatrix<T>::normScale2 (float value, bool & zeroNorm)
+{
+  zeroNorm = false;
+  value = abs(value);
+  float L2 = this->L2Norm();
+  if (L2 == 0.0f) zeroNorm = true;
+  else {
+    float coef = value / L2;
+    for (unsigned i=0; i<rows; ++i)
+      for (unsigned j=0; j<cols; ++j)
+        mat[i][j] *= coef;
+  }
+}
+
+// Clip all values less than threshold to zero
+// Leads to:  |abs(value)| > threshold or zero
+template <typename T>
+void MLMatrix<T>::clipToZero (float threshold)
+{
+  threshold = abs(threshold);
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
+      if (abs(mat[i][j]) < threshold) mat[i][j] = 0.0f;
     }
   }
 }
 
-// Clip all values greater than threshold to threshold
+// Set all values less than threshold to threshold
 template <typename T>
-void MLMatrix<T>::clipMax (const float threshold)
+void MLMatrix<T>::clipMin (float threshold)
 {
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
-      if (this->mat[i][j] > threshold) this->mat[i][j] = threshold;
+  threshold = abs(threshold);
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
+      if (abs(mat[i][j]) < threshold && mat[i][j] >= 0) mat[i][j] = threshold;
+      if (abs(mat[i][j]) < threshold && mat[i][j] < 0)  mat[i][j] = -threshold;
+    }
+  }
+}
+
+// Set all values greater than threshold to threshold
+// Leads to:     -threshold < value < threshold
+template <typename T>
+void MLMatrix<T>::clipMax (float threshold)
+{
+  threshold = abs(threshold);
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
+      if (mat[i][j] >  threshold) mat[i][j] =  threshold;
+      if (mat[i][j] < -threshold) mat[i][j] = -threshold;
     }
   }
 }
@@ -828,10 +879,10 @@ void MLMatrix<T>::clipMax (const float threshold)
 template<typename T>
 MLMatrix<T> MLMatrix<T>::sgn()
 {
-  MLMatrix<T> S;
-  for (unsigned i=0; i<rows; i++) {
-    for (unsigned j=0; j<cols; j++) {
-      S(i,j) = (T(0) < mat[i][j]) - (mat[i][j] < T(0));
+  MLMatrix<T> S(rows, cols, 0);
+  for (unsigned i=0; i<rows; ++i) {
+    for (unsigned j=0; j<cols; ++j) {
+      S(i,j) = (0 > mat[i][j]) ? T(-1) : T(1);
     }
   }
   return S;
@@ -846,7 +897,7 @@ MLMatrix<T> MLMatrix<T>::row(const uint32_t rowNumber)
     Serial.printf("Row extraction error: row %d greater than %d\n", rowNumber, rows);
     while(1);
   }
-  for (unsigned j=0; j<cols; j++) result(j, 0) = mat(rowNumber, j);
+  for (unsigned j=0; j<cols; ++j) result(j, 0) = mat(rowNumber, j);
   return result;
 }
 
@@ -858,7 +909,7 @@ MLMatrix<T> MLMatrix<T>::col(const uint32_t colNumber)
     Serial.printf("Column extraction error: col %d greater than %d\n", colNumber, cols);
     while(1);
   }
-  for (unsigned i=0; i<rows; i++) result(i, 0) = mat(i, colNumber);
+  for (unsigned i=0; i<rows; ++i) result(i, 0) = mat(i, colNumber);
   return result;
 }
 
