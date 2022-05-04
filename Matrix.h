@@ -107,10 +107,11 @@ template <typename T> class MLMatrix {
     MLMatrix<T> randomChange(const float);
     MLMatrix<T> normScale (float, bool &);
     void normScale2 (float, bool &);
-    void clipToZero (float);
-    void clipMin (float);
-    void clipMax (float);
+    int clipToZero (float);
+    int clipMin (float);
+    int clipMax (float);
     MLMatrix<T> sgn();
+    MLMatrix<T> randomNormal(const float, const float);
 };
 
 #include "matrix.cpp"

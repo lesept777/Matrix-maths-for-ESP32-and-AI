@@ -838,41 +838,50 @@ void MLMatrix<T>::normScale2 (float value, bool & zeroNorm)
 // Clip all values less than threshold to zero
 // Leads to:  |abs(value)| > threshold or zero
 template <typename T>
-void MLMatrix<T>::clipToZero (float threshold)
+int MLMatrix<T>::clipToZero (float threshold)
 {
+  int nbClip = 0;
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
-      if (abs(mat[i][j]) < threshold) mat[i][j] = 0.0f;
+      if (abs(mat[i][j]) <= threshold) mat[i][j] = 0.0f;
+      ++nbClip;
     }
   }
+  return nbClip;
 }
 
 // Set all values less than threshold to threshold
 template <typename T>
-void MLMatrix<T>::clipMin (float threshold)
+int MLMatrix<T>::clipMin (float threshold)
 {
+  int nbClip = 0;
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
       if (abs(mat[i][j]) < threshold && mat[i][j] >= 0) mat[i][j] = threshold;
       if (abs(mat[i][j]) < threshold && mat[i][j] < 0)  mat[i][j] = -threshold;
+      ++nbClip;
     }
   }
+  return nbClip;
 }
 
 // Set all values greater than threshold to threshold
 // Leads to:     -threshold < value < threshold
 template <typename T>
-void MLMatrix<T>::clipMax (float threshold)
+int MLMatrix<T>::clipMax (float threshold)
 {
+  int nbClip = 0;
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
       if (mat[i][j] >  threshold) mat[i][j] =  threshold;
       if (mat[i][j] < -threshold) mat[i][j] = -threshold;
+      ++nbClip;
     }
   }
+  return nbClip;
 }
 
 // Create a matrix with the sign (+1 or -1) of each element of an input matrix
@@ -945,5 +954,32 @@ MLMatrix<T> MLMatrix<T>::randomChange(const float amplitude)
   return *this;
 }
 
+/*  Generate a random matrix with normal distribution
+    using the polar form of Box Muller algorithm
+    usage:    MLMatrix<float> u(30, 30, 0.0f);
+              u.randomNormal(0.0f,1.0f);
+*/
+template<typename T>
+MLMatrix<T> MLMatrix<T>::randomNormal(const float mean, float std_dev)
+{
+  std_dev = abs(std_dev);
+  int dim = rows * cols;
+  float eps = 0.001f;
+  MLMatrix<T> N(rows, cols, 0);
+  MLMatrix<T> C(dim, 1, 0.0f);
+  for (unsigned i=0; i<rows; ++i)
+    for (unsigned j=0; j<cols; ++j) {
+      float r = 1.0f;
+      float u;
+      do {
+        u = 2 * float(random(100000)) / 100000.0f - 1;
+        float v = 2 * float(random(100000)) / 100000.0f - 1;
+        r = u * u + v * v;
+      } while (r > 1.0f && r != 0.0f);
+      mat[i][j] = u * sqrt(-2.0f * log(r) / r);
+      mat[i][j] = mat[i][j] * std_dev - mean;   
+    }
+  return *this;
+}
 
 #endif
