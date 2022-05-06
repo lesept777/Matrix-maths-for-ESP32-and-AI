@@ -69,3 +69,21 @@ float x = M(0,0);
 M(2,1) = 3;
 ```
 
+## Utilities
+### Dimensions
+* Number of rows: `M.get_rows()`
+* Number of comumns: `M.get_cols()`
+
+### Norms
+* L0 norm: `int L0 = M.L0norm();`
+* L1 norm: `float L1 = M.L1norm();`
+* L2 norm: `float L2 = M.L2norm();`
+
+### Special values
+* Mean: `float mean = M.mean();`
+* Standard deviation: `float stdev = M.stdev(mean);`
+* Min value: `float val = M.min();`
+* Max value: `float val = M.max();`
+* Min index: `M.indexMin(index_rows, index_cols)`
+* Max index: `M.indexMax(index_rows, index_cols)`
+* 
