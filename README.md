@@ -86,4 +86,17 @@ M(2,1) = 3;
 * Max value: `float val = M.max();`
 * Min index: `M.indexMin(index_rows, index_cols)`
 * Max index: `M.indexMax(index_rows, index_cols)`
-* 
+
+### Extraction
+* Extract a row: `row(number)`
+```MLMatrix<float> M(5, 5, 0, 1); // random values between 0 and 1
+MLMatrix<float> R(5, 1);
+R = M.row(3);
+```
+* Extract a column: `col(number)`
+* Sub matrix: `subMatrix(row_from, row_number, col_from, col_number)`
+
+## Display a matrix
+To display only the size: `M.printSize();`
+To display the entire matrix: `M.print();`
+
