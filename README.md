@@ -44,3 +44,28 @@ M *= C;
 * Hadamard (point wise) product: `M = A.Hadamard(B);`
 
 ### Vector operations
+Here vectors are matrices of size (rows, 1).
+* Dot product: 
+```
+  std::vector<int> v1 = {1, 2, 3};
+  std::vector<int> v2 = {4, 5, 6};
+  MLMatrix<int> mv1(3, 1, 0);
+  mv1 = v1;
+  MLMatrix<int> mv2(3, 1, 0);
+  mv2 = v2;
+  int P = mv1.MdotProd(mv2, true);
+```
+The second argument (optional) is a boolean: if set to `true` it prevents `NaN` or overflows.
+
+### Comparison
+Comparison operators are : `==`, `!=`, `<` and `>=`. The 2 first operators return a boolean value, the others return a boolean matrix.
+
+## Accessing elements
+Access elements of a matrix using parenthesis:
+```
+MLMatrix<float> M(3, 3, -1, 1); // random matrix
+Serial.println(M(1,2));
+float x = M(0,0);
+M(2,1) = 3;
+```
+
