@@ -45,7 +45,7 @@ M *= C;
 
 ### Vector operations
 Here vectors are matrices of size (rows, 1).
-* Dot product: 
+* Dot product (of vectors defined as MLMatrix): 
 ```
   std::vector<int> v1 = {1, 2, 3};
   std::vector<int> v2 = {4, 5, 6};
@@ -55,7 +55,8 @@ Here vectors are matrices of size (rows, 1).
   mv2 = v2;
   int P = mv1.MdotProd(mv2, true);
 ```
-The second argument (optional) is a boolean: if set to `true` it prevents `NaN` or overflows.
+* Dot product of `std::vector`: `X = dotProd(V1, V2, true)`
+For both operations, the last argument (optional) is a boolean: if set to `true` it prevents `NaN` or overflows.
 
 ### Comparison
 Comparison operators are : `==`, `!=`, `<` and `>=`. The 2 first operators return a boolean value, the others return a boolean matrix.
@@ -86,6 +87,15 @@ M(2,1) = 3;
 * Max value: `float val = M.max();`
 * Min index: `M.indexMin(index_rows, index_cols)`
 * Max index: `M.indexMax(index_rows, index_cols)`
+* Sign: `M.sign()` creates a matrix of the same size with +1s or -1s depending on the sign of its elements
+
+### Random matrix
+To create a random matrix with normal distribution (mean, standard deviation):
+```
+MLMatrix<float> M(3, 3, 0);
+M.randomNormal(1, 2);
+```
+Now M has mean = 1 and standard deviation = 3.
 
 ### Extraction
 * Extract a row: `row(number)`
@@ -98,5 +108,17 @@ R = M.row(3);
 
 ## Display a matrix
 To display only the size: `M.printSize();`
+
 To display the entire matrix: `M.print();`
 
+## Misc utilities
+### Random change
+To apply a random change to the values of a matrix: `M.randomChange(amplitude)` where amplitude is the 'percentage' of change. 
+`M.randomChange(0.1)` multiplies all the elements of M by a random number between 0.9 and 1.1 (up to + or - 10%).
+
+### Clip & scale
+* `M.clipToZero(threshold)` forces all elements less or equal to threshold to 0
+* `M.clipMin(threshold)` forces all elements whose absolute value is less than threshold to threshold
+* `M.clipMax(threshold)` forces all elements whose absolute value is higher than threshold to threshold
+* `A = M.normScale(value);` scales the L2 norm of M to the passed value and creates a new matrix
+* `M.normScale2(value)` only scales the matrix so that its L2 norm is eual to `value`
