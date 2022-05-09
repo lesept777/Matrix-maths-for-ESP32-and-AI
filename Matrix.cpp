@@ -54,7 +54,7 @@ template<typename T>
 MLMatrix<T>::MLMatrix(const T& rhs, const unsigned dim) {
   rows = dim;
   cols = 1;
-  mat.resize(rows);
+  mat.resize(rows, rhs);
 }
 
 // random matrix Constructor
@@ -433,7 +433,7 @@ const T& MLMatrix<T>::operator()(const unsigned& row, const unsigned& col) const
 /***************************************************************************************************
   Comparison operators
 */
-// Determine if two arrays are equal and return true, otherwise return false.
+// Determine if two matrices are equal and return true, otherwise return false.
 template <typename T>
 const bool MLMatrix<T>::operator==( const MLMatrix<T> &rhs ) const
 {
@@ -453,13 +453,13 @@ const bool MLMatrix<T>::operator!=( const MLMatrix<T> &rhs ) const
 
 // Compare 2 matrices element wise
 template <typename T>
-MLMatrix<T> MLMatrix<T>::operator<( const MLMatrix<T> &rhs )
+MLMatrix<bool> MLMatrix<T>::operator<( const MLMatrix<T> &rhs )
 {
   if ( rows != rhs.rows || cols != rhs.cols ) { // matrices of different sizes
     Serial.printf("Comparison error: dimensions do not match (%d, %d)<(%d, %d)", cols, rows, rhs.get_cols(), rhs.get_rows());
     while(1);
   }
-  MLMatrix result(rows, cols, 0);
+  MLMatrix<bool> result(rows, cols, 0);
   for ( unsigned i = 0; i < rows; ++i )
     for ( unsigned j = 0; j < cols; ++j )
       result(i,j) = T(mat[i][j] < rhs.mat[i][j] ? true : false); 
@@ -467,13 +467,13 @@ MLMatrix<T> MLMatrix<T>::operator<( const MLMatrix<T> &rhs )
 }
 
 template <typename T>
-MLMatrix<T> MLMatrix<T>::operator>=( const MLMatrix<T> &rhs )
+MLMatrix<bool> MLMatrix<T>::operator>=( const MLMatrix<T> &rhs )
 {
   if ( rows != rhs.rows || cols != rhs.cols ) { // matrices of different sizes
     Serial.printf("Comparison error: dimensions do not match (%d, %d)>=(%d, %d)", cols, rows, rhs.get_cols(), rhs.get_rows());
     while(1);
   }
-  MLMatrix result(rows, cols, 0);
+  MLMatrix<bool> result(rows, cols, 0);
   for ( unsigned i = 0; i < rows; ++i )
     for ( unsigned j = 0; j < cols; ++j )
       result(i,j) = T(mat[i][j] >= rhs.mat[i][j] ? true : false); 
@@ -819,20 +819,22 @@ MLMatrix<T> MLMatrix<T>::normScale (float value, bool & zeroNorm)
 }
 
 // Scale the norm to a given value
-// usage: X.normScale2(val, zeroNorm);
+// usage: bool zeroNorm = X.normScale2(val);
+// Returns true if L2 norm is zero, else false
 template <typename T>
-void MLMatrix<T>::normScale2 (float value, bool & zeroNorm)
+bool MLMatrix<T>::normScale2 (float value)
 {
-  zeroNorm = false;
+  bool zeroNorm = false;
   value = abs(value);
   float L2 = this->L2Norm();
-  if (L2 == 0.0f) zeroNorm = true;
+  if (L2 == 0.0f) zeroNorm = true; // don't scale if L2 norm is zero
   else {
     float coef = value / L2;
     for (unsigned i=0; i<rows; ++i)
       for (unsigned j=0; j<cols; ++j)
         mat[i][j] *= coef;
   }
+  return zeroNorm;
 }
 
 // Clip all values less than threshold to zero
@@ -899,26 +901,26 @@ MLMatrix<T> MLMatrix<T>::sgn()
 
 // Extract a row or a column from a matrix
 template<typename T>
-MLMatrix<T> MLMatrix<T>::row(const uint32_t rowNumber)
+MLMatrix<T> MLMatrix<T>::row(const uint16_t rowNumber)
 {
   MLMatrix<T> result(1, cols, 0);
   if (rowNumber > rows) { 
     Serial.printf("Row extraction error: row %d greater than %d\n", rowNumber, rows);
     while(1);
   }
-  for (unsigned j=0; j<cols; ++j) result(j, 0) = mat(rowNumber, j);
+  for (unsigned j=0; j<cols; ++j) result(0, j) = mat[rowNumber][j];
   return result;
 }
 
 template<typename T>
-MLMatrix<T> MLMatrix<T>::col(const uint32_t colNumber)
+MLMatrix<T> MLMatrix<T>::col(const uint16_t colNumber)
 {
   MLMatrix<T> result(rows, 1, 0);
   if (colNumber > cols) { 
     Serial.printf("Column extraction error: col %d greater than %d\n", colNumber, cols);
     while(1);
   }
-  for (unsigned i=0; i<rows; ++i) result(i, 0) = mat(i, colNumber);
+  for (unsigned i=0; i<rows; ++i) result(i, 0) = mat[i][colNumber];
   return result;
 }
 
@@ -927,7 +929,7 @@ MLMatrix<T> MLMatrix<T>::col(const uint32_t colNumber)
       col0 <= col < col0 + ncols
 */
 template<typename T>
-MLMatrix<T> MLMatrix<T>::subMatrix(const uint32_t row0, const uint32_t nrows, const uint32_t col0, const uint32_t ncols)
+MLMatrix<T> MLMatrix<T>::subMatrix(const uint16_t row0, const uint16_t nrows, const uint16_t col0, const uint16_t ncols)
 {
   if (row0 + nrows > rows || col0 + ncols > cols) {
     Serial.printf ("Submatrix extraction error (rows from %d to %d, cols from %d to %d)", row0, row0+nrows, col0, col0+ncols);
@@ -940,14 +942,47 @@ MLMatrix<T> MLMatrix<T>::subMatrix(const uint32_t row0, const uint32_t nrows, co
   return result;
 }
 
+// Remove a row from the matrix
+// usage A.removeRow(n);
+template<typename T>
+MLMatrix<T> MLMatrix<T>::removeRow(const uint16_t index)
+{
+  if (index > rows) {
+    Serial.printf ("Remove error: cannot remove row %d, size is %d\n", index, rows);
+    while(1);
+  }
+  for (unsigned i=index; i<rows-1; ++i)
+    for (unsigned j=0; j<cols; ++j)
+      mat[i][j] = mat[i+1][j];
+  --rows;
+  return *this;
+}
+
+// Remove a column from the matrix
+// usage A.removeCol(n);
+template<typename T>
+MLMatrix<T> MLMatrix<T>::removeCol(const uint16_t index)
+{
+  if (index > cols) {
+    Serial.printf ("Remove error: cannot remove col %d, size is %d\n", index, cols);
+    while(1);
+  }
+  for (unsigned i=0; i<rows; ++i)
+    for (unsigned j=index; j<cols-1; ++j)
+      mat[i][j] = mat[i][j+1];
+  --cols;
+  return *this;
+}
+
 // Apply a random change to all elements of a matrix
+// Example : randomChange(0.1) applies random multiplication by a factor in [0.9, 1.1]
 template<typename T>
 MLMatrix<T> MLMatrix<T>::randomChange(const float amplitude)
 {
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
       // random number between -1 and +1
-      float rand = float(random(10000)) / 10000.0f * 2.0f - 1.0f;
+      float rand = float(random(10000)) / 10000.0f * 2.0f - 1.0f; // random in [-1, +1]
       mat[i][j] = mat[i][j] * (1.0f + rand * amplitude);
     }
   }
@@ -980,6 +1015,67 @@ MLMatrix<T> MLMatrix<T>::randomNormal(const float mean, float std_dev)
       mat[i][j] = mat[i][j] * std_dev - mean;   
     }
   return *this;
+}
+
+
+///////////////////////////////////////////////////////////////
+//      Pruning functions
+///////////////////////////////////////////////////////////////
+
+// Put the values of the matrix in a vector and sort the vector in descending order
+// usage: std::vector<float> vec = M.sortValues();
+template<typename T>
+std::vector<T> MLMatrix<T>::sortValues(bool absVal)
+{
+  std::vector<T> vec;
+  for (unsigned i=0; i<rows; ++i)
+    for (unsigned j=0; j<cols; ++j) {
+      if (absVal) vec.push_back(abs(mat[i][j]));
+      else        vec.push_back(mat[i][j]);     
+    }
+  sort(vec.begin(), vec.end(), std::greater<T>());
+  return vec;
+}
+
+// Verify if a row or column is full of 0
+template<typename T>
+bool MLMatrix<T>::zeroRow(int rowNumber)
+{
+  bool isZero = false;
+  MLMatrix<T> R(1, cols, T(0));
+  for (unsigned j=0; j<cols; ++j) R(0,j) = mat[rowNumber][j];
+  T valMax = R.max();
+  T valMin = R.min();
+  isZero = (valMax == T(0)) && (valMin == T(0)) ? true : false;
+  return isZero;
+}
+
+template<typename T>
+bool MLMatrix<T>::zeroCol(int colNumber)
+{
+  bool isZero = false;
+  MLMatrix<T> C(1, rows, T(0));
+  for (unsigned i=0; i<rows; ++i) C(0,i) = mat[i][colNumber];
+  T valMax = C.max();
+  T valMin = C.min();
+  isZero = (valMax == T(0)) && (valMin == T(0)) ? true : false;
+  return isZero;
+}
+
+template<typename T>
+uint16_t MLMatrix<T>::countZeroRow(int rowNumber)
+{
+  uint16_t zero = 0;
+  for (unsigned j=0; j<cols; ++j) if(mat[rowNumber][j] == T(0)) ++ zero;
+  return zero;
+}
+
+template<typename T>
+uint16_t MLMatrix<T>::countZeroCol(int colNumber)
+{
+  uint16_t zero = 0;
+  for (unsigned i=0; i<rows; ++i) if(mat[i][colNumber] == T(0)) ++ zero;
+  return zero;
 }
 
 #endif

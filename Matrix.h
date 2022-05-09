@@ -66,12 +66,14 @@ template <typename T> class MLMatrix {
     // Vector operations
     T MdotProd(const MLMatrix<T>& rhs, bool clip=false);
     MLMatrix<T> times(const MLMatrix<T>& rhs, bool clip=false);
+    std::vector<T> sortValues(bool = true);
+    // int indexMaxGrad(std::vector<T>);
 
     // Matrix comparison
     const bool  operator==( const MLMatrix<T> &rhs ) const;
     const bool  operator!=( const MLMatrix<T> &rhs ) const;
-    MLMatrix<T> operator< ( const MLMatrix<T> &rhs );
-    MLMatrix<T> operator>=( const MLMatrix<T> &rhs );
+    MLMatrix<bool> operator< ( const MLMatrix<T> &rhs );
+    MLMatrix<bool> operator>=( const MLMatrix<T> &rhs );
 
     // Access the individual elements: mat(i,j)
     T& operator()(const unsigned& row, const unsigned& col);
@@ -89,11 +91,19 @@ template <typename T> class MLMatrix {
     T min() const;
     float mean() const;
     float stdev(const float) const;
+    bool zeroRow(int);
+    bool zeroCol(int);
+    uint16_t countZeroRow(int);
+    uint16_t countZeroCol(int);
 
     // Extract row or col
-    MLMatrix<T> row(const uint32_t);
-    MLMatrix<T> col(const uint32_t);
-    MLMatrix<T> subMatrix(const uint32_t, const uint32_t, const uint32_t, const uint32_t);
+    MLMatrix<T> row(const uint16_t);
+    MLMatrix<T> col(const uint16_t);
+    MLMatrix<T> subMatrix(const uint16_t, const uint16_t, const uint16_t, const uint16_t);
+
+    // Remove element
+    MLMatrix<T> removeRow(const uint16_t);
+    MLMatrix<T> removeCol(const uint16_t); 
 
     // Display the matrix
     void print();
@@ -106,7 +116,7 @@ template <typename T> class MLMatrix {
     // Misc
     MLMatrix<T> randomChange(const float);
     MLMatrix<T> normScale (float, bool &);
-    void normScale2 (float, bool &);
+    bool normScale2 (float);
     int clipToZero (float);
     int clipMin (float);
     int clipMax (float);
@@ -151,6 +161,28 @@ T dotProd(const std::vector<T>& a, const std::vector<T>& b, bool clip=false)
         if (sum > std::numeric_limits<T>::max()) sum = std::numeric_limits<T>::max();
         return T(sum);
     }
+}
+
+/* Find the index of the maximum difference between 2 consecutive
+   elements of a vector sorted in descending order
+   Best usage: i = indexMaxDiff(M.sortValues());
+   This sorts the values of the matrix M and returns the index
+*/
+template<typename T>
+int indexMaxDiff(std::vector<T> v)
+{
+  int index;
+  unsigned dim = v.size();
+  T maxDiff = 0;
+  std::vector<T> dv;
+  for (unsigned i=0; i<dim-1; ++i) dv.push_back(abs(v[i]-v[i+1]));
+  for (unsigned i=0; i<dim-1; ++i) {
+    if (dv[i] > maxDiff) {
+      maxDiff = dv[i];
+      index = i;
+    }
+  }
+  return index;
 }
 
 #endif
