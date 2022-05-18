@@ -1,6 +1,6 @@
 /* 
-    Matrix linear algebre library for ML applications
-    Inspred by: https://www.quantstart.com/articles/Matrix-Classes-in-C-The-Source-File/
+    Matrix linear algebra library for ML applications (ML: Machine Learning)
+    Inspired by: https://www.quantstart.com/articles/Matrix-Classes-in-C-The-Source-File/
     Some errors were corrected, methods and constructors added
 
     (c) Lesept dec. 2021  lesept777@gmail.com
@@ -26,7 +26,7 @@ template <typename T> class MLMatrix {
     MLMatrix(const MLMatrix<T>& rhs);
     MLMatrix(const MLMatrix<T>& rhs, const T& _initial); // copy the size of a matrix, fill with initial
     MLMatrix(const std::vector<T>& rhs);
-    MLMatrix(const T& rhs, const unsigned dim);
+    MLMatrix(const T rhs[], const unsigned dim);
     virtual ~MLMatrix();
 
     // Identity matrix

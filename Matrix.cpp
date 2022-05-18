@@ -42,19 +42,22 @@ MLMatrix<T>::MLMatrix(const MLMatrix<T>& rhs, const T& _initial) {
   }
 }
 
+// Copy Constructor (from a vector)
 template<typename T>
 MLMatrix<T>::MLMatrix(const std::vector<T>& rhs) {
   rows = rhs.size();
   cols = 1;
-  for (unsigned i=0; i<rows; ++i)
-    mat[i][0] = rhs[i];
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) mat[i].resize(cols, rhs[i]);
 }
 
+// Copy Constructor (from an array)
 template<typename T>
-MLMatrix<T>::MLMatrix(const T& rhs, const unsigned dim) {
+MLMatrix<T>::MLMatrix(const T rhs[], const unsigned dim) {
   rows = dim;
   cols = 1;
-  mat.resize(rows, rhs);
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) mat[i].resize(cols, rhs[i]);
 }
 
 // random matrix Constructor
@@ -133,6 +136,7 @@ template<typename T>
 MLMatrix<T>& MLMatrix<T>::operator=(const T rhs[]) {
   unsigned new_rows = sizeof(rhs) / sizeof(T);
   unsigned new_cols = 1;
+  Serial.printf("rows %d cols %d\n",new_rows, new_cols);
 
   mat.resize(new_rows);
   for (unsigned i=0; i<new_rows; ++i) mat[i][0] = rhs[i];
