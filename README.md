@@ -60,6 +60,7 @@ Here vectors are matrices of size (rows, 1).
   int P = mv1.MdotProd(mv2, true);
 ```
 * Dot product of `std::vector`: `X = dotProd(V1, V2, true)`
+
 For both operations, the last argument (optional) is a boolean: if set to `true` it prevents `NaN` or overflows.
 
 ### Comparison
