@@ -36,6 +36,8 @@ MLMatrix<float> U(v);    // assigns the vector to the matrix
 MLMatrix<float> X = v;   // this works also
 ```
 
+No need to tell the dimensions, it's automatic!
+
 ### Matrix operations
 * Addition, substraction, mulitplication of matrices
 ```
