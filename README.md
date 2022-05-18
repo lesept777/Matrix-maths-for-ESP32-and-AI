@@ -25,10 +25,14 @@ This library was developed with utility functions useful in my MLP library.
 ## Operations
 Operators are overloaded.
 ### Assign
-You can assign a vector (std::vector) or an array to a matrix
+You can assign a vector (std::vector) or an array to a matrix:
 ```
 float x[3] = {1, 2, 3};
 MLMatrix<float> M(x, 3);
+
+std::vector<float> v;
+v.assign(x,x+2); // copies the array into the vector
+MLMatrix<float> U(v);
 ```
 
 ### Matrix operations
