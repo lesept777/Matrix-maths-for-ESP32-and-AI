@@ -17,7 +17,7 @@ This library was developed with utility functions useful in my MLP library.
       MLMatrix M(A, value);
     Create a matrix from a C++ vector V, the content of the matrix is the same as the vector's
       MLMatrix M(V);
-    Create a matrix from a C++ vector V oif vectors, each vector is a row of the matrix
+    Create a matrix from a C++ vector V of vectors, each vector is a row of the matrix
       MLMatrix M(V);
     Create a matrix from an array A of size s, the content of the matrix is the same as the array's
       MLMatrix M(A, s);
