@@ -31,7 +31,7 @@ float x[3] = {1, 2, 3};
 MLMatrix<float> M(x, 3); // assigns the array to the matrix
 
 std::vector<float> v;
-v.assign(x, x+3);        // copies the array into the vector
+v.assign(x, x+3);       // copies the array into the vector
 MLMatrix<float> U(v);   // assigns the vector to the matrix
 MLMatrix<float> X = v;  // this works also
 ```
