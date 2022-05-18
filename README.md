@@ -28,8 +28,7 @@ Operators are overloaded.
 You can assign a vector (std::vector) or an array to a matrix
 ```
 float x[3] = {1, 2, 3};
-MLMatrix<float> M(3, 1, 0);
-M = x;
+MLMatrix<float> M(x, 3);
 ```
 
 ### Matrix operations
