@@ -25,7 +25,8 @@ template <typename T> class MLMatrix {
     MLMatrix(unsigned _rows, unsigned _cols, const T min, const T max); // random matrix
     MLMatrix(const MLMatrix<T>& rhs);
     MLMatrix(const MLMatrix<T>& rhs, const T& _initial); // copy the size of a matrix, fill with initial
-    MLMatrix(const std::vector<T>& rhs);
+    MLMatrix(const std::vector<T>& rhs); // copy a vector into a matrix (1 column)
+    MLMatrix(const std::vector<std::vector<T> >& rhs); // copy a vector of vectors into a matrix
     MLMatrix(const T rhs[], const unsigned dim);
     virtual ~MLMatrix();
 
@@ -35,7 +36,7 @@ template <typename T> class MLMatrix {
     // Operator overloading, for "standard" mathematical matrix operations                                                                                                                                                          
     MLMatrix<T>& operator=(const MLMatrix<T>& rhs);  // copy a matrix
     MLMatrix<T>& operator=(const std::vector<T>& rhs); // copy a vector to a matrix (n,1)
-    MLMatrix<T>& operator=(const T rhs[]); // copy from 1D array 
+    MLMatrix<T>& operator=(const std::vector<std::vector<T> >& rhs); // copy from a vector of vectors
 
     // Matrix mathematical operations                                                                                                                                                                                               
     MLMatrix<T>  operator+ (const MLMatrix<T>& rhs) const;

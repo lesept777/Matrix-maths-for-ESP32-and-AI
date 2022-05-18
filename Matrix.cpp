@@ -47,8 +47,22 @@ template<typename T>
 MLMatrix<T>::MLMatrix(const std::vector<T>& rhs) {
   rows = rhs.size();
   cols = 1;
+
   mat.resize(rows);
   for (unsigned i=0; i<rows; ++i) mat[i].resize(cols, rhs[i]);
+}
+
+// Copy Constructor (from a vector of vectors)
+template<typename T>
+MLMatrix<T>::MLMatrix(const std::vector<std::vector<T> >& rhs) {
+  rows = rhs.size();
+  cols = rhs[0].size();
+
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) {
+    mat[i].resize(cols);
+    for (unsigned j=0; j<cols; ++j) mat[i][j] = rhs[i][j];
+  }
 }
 
 // Copy Constructor (from an array)
@@ -116,33 +130,25 @@ MLMatrix<T>& MLMatrix<T>::operator=(const MLMatrix<T>& rhs) {
 // Assignment from vector
 template<typename T>
 MLMatrix<T>& MLMatrix<T>::operator=(const std::vector<T>& rhs) {
-  unsigned new_rows = rhs.size();
-  unsigned new_cols = 1;
+  unsigned rows = rhs.size();
+  unsigned cols = 1;
 
-/* ???
-  mat.resize(0);
-  mat[0].resize(new_rows);
-*/
-  mat.resize(new_rows);
-  for (unsigned i=0; i<new_rows; ++i) mat[i][0] = rhs[i];
-  rows = new_rows;
-  cols = new_cols;
-
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) mat[i][0] = rhs[i];
   return *this;
 }
 
-// Assignment from 1D array
+// Assignment from vector of vectors
 template<typename T>
-MLMatrix<T>& MLMatrix<T>::operator=(const T rhs[]) {
-  unsigned new_rows = sizeof(rhs) / sizeof(T);
-  unsigned new_cols = 1;
-  Serial.printf("rows %d cols %d\n",new_rows, new_cols);
+MLMatrix<T>& MLMatrix<T>::operator=(const std::vector<std::vector<T> >& rhs) {
+  unsigned rows = rhs.size();
+  unsigned cols = rhs[0].size();
 
-  mat.resize(new_rows);
-  for (unsigned i=0; i<new_rows; ++i) mat[i][0] = rhs[i];
-  rows = new_rows;
-  cols = new_cols;
-
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) {
+    mat[i].resize(cols);
+    for (unsigned j=0; j<cols; ++j) mat[i][j] = rhs[i][j];
+  }
   return *this;
 }
 
