@@ -37,6 +37,7 @@ template <typename T> class MLMatrix {
     MLMatrix<T>& operator=(const MLMatrix<T>& rhs);  // copy a matrix
     MLMatrix<T>& operator=(const std::vector<T>& rhs); // copy a vector to a matrix (n,1)
     MLMatrix<T>& operator=(const std::vector<std::vector<T> >& rhs); // copy from a vector of vectors
+    MLMatrix<T>& fromArray(const T rhs[], const unsigned dim); // copy from an array of size dim
 
     // Matrix mathematical operations                                                                                                                                                                                               
     MLMatrix<T>  operator+ (const MLMatrix<T>& rhs) const;
@@ -83,6 +84,7 @@ template <typename T> class MLMatrix {
     // Access the row and column sizes                                                                                                                                                                                              
     unsigned get_rows() const;
     unsigned get_cols() const;
+    void setSize(const int _rows, const int _cols, const T= T(0));
 
     // Norms
     int L0Norm();

@@ -152,6 +152,14 @@ MLMatrix<T>& MLMatrix<T>::operator=(const std::vector<std::vector<T> >& rhs) {
   return *this;
 }
 
+// Assignment from array
+template<typename T>
+MLMatrix<T>& MLMatrix<T>::fromArray(const T rhs[], const unsigned dim) {
+  rows = dim;
+  cols = 1;
+  mat.resize(rows);
+  for (unsigned i=0; i<rows; ++i) mat[i].resize(cols, rhs[i]);
+}
 
 /***************************************************************************************************
   Operators
@@ -501,6 +509,17 @@ unsigned MLMatrix<T>::get_rows() const { return this->rows; }
 // Get the number of columns of the matrix                                                                                                                                    
 template<typename T>
 unsigned MLMatrix<T>::get_cols() const { return this->cols; }
+
+template <typename T>
+void MLMatrix<T>::setSize(const int _rows, const int _cols, const T val)
+{
+  rows = _rows;
+  cols = _cols;
+  mat.resize(_rows);
+  for (unsigned i=0; i<mat.size(); ++i) {
+    mat[i].resize(_cols, val);
+  }
+}
 
 // Display the matrix
 // usage: mat.print();
