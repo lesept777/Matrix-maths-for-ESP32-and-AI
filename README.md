@@ -169,14 +169,14 @@ To apply a random change to the values of a matrix: `M.randomChange(amplitude)` 
 - `A = M.normScale(value);` scales the L2 norm of M to the passed value and creates a new matrix
 - `M.normScale2(value)` only scales the matrix so that its L2 norm is eual to `value`
 
-## Check
+### Check
 
 - Check if a row is full of 0s: `M.zeroRow(rowNumber)`
 - Check if a column is full of 0s: `M.zeroCol(colNumber)`
 - Count the number of 0s in a row: `M.countZeroRow(rowNumber)`
 - Count the number of 0s in a column: `M.countZeroCol(colNumber)`
 
-## Set values
+### Set values
 
 - Set a row to all 0s: `M.setZeroCol(rowNumber)`
 - Set a column to all 0s: `M.setZeroRow(colNumber)`
