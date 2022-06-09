@@ -521,6 +521,7 @@ void MLMatrix<T>::setSize(const int _rows, const int _cols, const T val)
   }
 }
 
+// Set an entire row or column to zero
 template <typename T>
 void MLMatrix<T>::setZeroRow(const int rowNumber)
 {
@@ -531,6 +532,32 @@ template <typename T>
 void MLMatrix<T>::setZeroCol(const int colNumber)
 {
   for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = T(0);
+}
+
+// Set an entire row or column to a given value
+template <typename T>
+void MLMatrix<T>::setRow(const int rowNumber, const T value)
+{
+  for (int j = 0; j < cols; ++j) this->mat[rowNumber][j] = value;
+}
+
+template <typename T>
+void MLMatrix<T>::setCol(const int colNumber, const T value)
+{
+  for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = value;
+}
+
+// Replace an entire row or column with values from a 1D matrix
+template <typename T>
+void MLMatrix<T>::setRowMat(const int rowNumber, const MLMatrix<T> values)
+{
+  for (int j = 0; j < cols; ++j) this->mat[rowNumber][j] = values(0, j);
+}
+
+template <typename T>
+void MLMatrix<T>::setColMat(const int colNumber, MLMatrix<T> values)
+{
+  for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = values(i, 0);
 }
 
 

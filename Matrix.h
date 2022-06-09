@@ -128,6 +128,10 @@ template <typename T> class MLMatrix {
     MLMatrix<T> randomNormal(const float, const float);
     void setZeroCol(const int);
     void setZeroRow(const int);
+    void setCol(const int, const T);
+    void setRow(const int, const T);
+    void setColMat(const int, const MLMatrix<T>);
+    void setRowMat(const int, const MLMatrix<T>);
 };
 
 #include "matrix.cpp"
