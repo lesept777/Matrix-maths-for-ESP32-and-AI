@@ -98,6 +98,7 @@ template <typename T> class MLMatrix {
     bool zeroCol(int);
     uint16_t countZeroRow(int);
     uint16_t countZeroCol(int);
+    float meanRow(int);
 
     // Extract row or col
     MLMatrix<T> row(const uint16_t);
@@ -125,6 +126,8 @@ template <typename T> class MLMatrix {
     int clipMax (float);
     MLMatrix<T> sgn();
     MLMatrix<T> randomNormal(const float, const float);
+    void setZeroCol(const int);
+    void setZeroRow(const int);
 };
 
 #include "matrix.cpp"

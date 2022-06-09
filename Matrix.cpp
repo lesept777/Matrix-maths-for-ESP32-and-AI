@@ -521,6 +521,19 @@ void MLMatrix<T>::setSize(const int _rows, const int _cols, const T val)
   }
 }
 
+template <typename T>
+void MLMatrix<T>::setZeroRow(const int rowNumber)
+{
+  for (int j = 0; j < cols; ++j) this->mat[rowNumber][j] = T(0);
+}
+
+template <typename T>
+void MLMatrix<T>::setZeroCol(const int colNumber)
+{
+  for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = T(0);
+}
+
+
 // Display the matrix
 // usage: mat.print();
 template <typename T>
@@ -815,6 +828,17 @@ float MLMatrix<T>::mean() const
   return mean;
 }
 
+// Compute the mean ansolute value of a row
+template<typename T>
+float MLMatrix<T>::meanRow(int rowNumber)
+{
+  float mean = 0.0f;
+  for (unsigned j=0; j<cols; ++j) mean += abs(this->mat[rowNumber][j]);
+  mean /= float(cols);
+  return mean;
+}
+
+
 template<typename T>
 float MLMatrix<T>::stdev(const float mean) const
 {
@@ -868,6 +892,7 @@ bool MLMatrix<T>::normScale2 (float value)
 
 // Clip all values less than threshold to zero
 // Leads to:  |abs(value)| > threshold or zero
+// Returns:   number of clipped values
 template <typename T>
 int MLMatrix<T>::clipToZero (float threshold)
 {
@@ -875,8 +900,10 @@ int MLMatrix<T>::clipToZero (float threshold)
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
-      if (abs(mat[i][j]) <= threshold) mat[i][j] = 0.0f;
-      ++nbClip;
+      if (abs(mat[i][j]) <= threshold) {
+        mat[i][j] = 0.0f;
+        ++nbClip;
+      }
     }
   }
   return nbClip;
@@ -890,9 +917,14 @@ int MLMatrix<T>::clipMin (float threshold)
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
-      if (abs(mat[i][j]) < threshold && mat[i][j] >= 0) mat[i][j] = threshold;
-      if (abs(mat[i][j]) < threshold && mat[i][j] < 0)  mat[i][j] = -threshold;
-      ++nbClip;
+      if (abs(mat[i][j]) < threshold && mat[i][j] >= 0) {
+        mat[i][j] = threshold;
+        ++nbClip;
+      }
+      if (abs(mat[i][j]) < threshold && mat[i][j] < 0) {
+        mat[i][j] = -threshold;
+        ++nbClip;
+      }
     }
   }
   return nbClip;
@@ -907,9 +939,14 @@ int MLMatrix<T>::clipMax (float threshold)
   threshold = abs(threshold);
   for (unsigned i=0; i<rows; ++i) {
     for (unsigned j=0; j<cols; ++j) {
-      if (mat[i][j] >  threshold) mat[i][j] =  threshold;
-      if (mat[i][j] < -threshold) mat[i][j] = -threshold;
-      ++nbClip;
+      if (mat[i][j] >  threshold) {
+        mat[i][j] =  threshold;
+        ++nbClip;
+      }
+      if (mat[i][j] < -threshold) {
+        mat[i][j] = -threshold;
+        ++nbClip;
+      }
     }
   }
   return nbClip;
