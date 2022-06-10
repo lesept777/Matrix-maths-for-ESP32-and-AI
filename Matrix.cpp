@@ -560,6 +560,20 @@ void MLMatrix<T>::setColMat(const int colNumber, MLMatrix<T> values)
   for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = values(i, 0);
 }
 
+template <typename T>
+int MLMatrix<T>::dropout(const float proba)
+{
+  int nbDrop = 0;
+  for (unsigned i=0; i<rows; ++i)
+    for (unsigned j=0; j<cols; ++j)
+      if (float(random(10000)) / 10000.0f < proba) {
+        mat[i][j] = T(0);
+        ++ nbDrop;
+     }
+  return nbDrop;
+}
+
+
 
 // Display the matrix
 // usage: mat.print();
@@ -855,7 +869,7 @@ float MLMatrix<T>::mean() const
   return mean;
 }
 
-// Compute the mean ansolute value of a row
+// Compute the mean absolute value of a row
 template<typename T>
 float MLMatrix<T>::meanRow(int rowNumber)
 {
