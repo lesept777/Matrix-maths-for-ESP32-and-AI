@@ -104,7 +104,8 @@ M(2,1) = 3;
 ### Dimensions
 
 - Number of rows: `M.get_rows()`
-- Number of comumns: `M.get_cols()`
+- Number of columns: `M.get_cols()`
+- Set the size and fill with constant value (default 0): `M.setSize(rows, cols, value)`
 
 ### Norms
 
