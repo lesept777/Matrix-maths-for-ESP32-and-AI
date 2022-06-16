@@ -169,7 +169,7 @@ To apply a random change to the values of a matrix: `M.randomChange(amplitude)` 
 - `M.clipMax(threshold)` forces all elements whose absolute value is higher than threshold to threshold
 - `A = M.normScale(value);` scales the L2 norm of M to the passed value and creates a new matrix
 - `M.normScale2(value)` only scales the matrix so that its L2 norm is eual to `value`
-- `M.dropout(threshold)` sets the elements of a matrix to zero if a random number is less than a given threshold, returns the mask of the transformation (1s eveywhere, and 0s where the elements were changed)
+- `Mask = M.dropout(threshold)` sets the elements of a matrix to zero if a random number is less than a given threshold, returns the mask of the transformation (1s eveywhere, and 0s where the elements were changed)
 
 ### Check
 
