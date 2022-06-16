@@ -132,7 +132,7 @@ template <typename T> class MLMatrix {
     void setRow(const int, const T);
     void setColMat(const int, const MLMatrix<T>);
     void setRowMat(const int, const MLMatrix<T>);
-    int dropout(const float);
+    MLMatrix<uint8_t>  dropout(const float);
 };
 
 #include "matrix.cpp"

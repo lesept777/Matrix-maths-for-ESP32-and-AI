@@ -560,17 +560,20 @@ void MLMatrix<T>::setColMat(const int colNumber, MLMatrix<T> values)
   for (int i = 0; i < rows; ++i) this->mat[i][colNumber] = values(i, 0);
 }
 
+// Apply dropout to a matrix: elements are set to zero with a given probability
+// Returns the dropout mask: a matrix of the same size with
+// 1 if the element didn't change and 0 if was set to 0
 template <typename T>
-int MLMatrix<T>::dropout(const float proba)
+MLMatrix<uint8_t>  MLMatrix<T>::dropout(const float proba)
 {
-  int nbDrop = 0;
+  MLMatrix<uint8_t> mask(rows, cols, 1);
   for (unsigned i=0; i<rows; ++i)
     for (unsigned j=0; j<cols; ++j)
       if (float(random(10000)) / 10000.0f < proba) {
         mat[i][j] = T(0);
-        ++ nbDrop;
+        mask(i,j) = 0;
      }
-  return nbDrop;
+  return mask;
 }
 
 
