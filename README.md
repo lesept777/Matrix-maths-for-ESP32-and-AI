@@ -14,7 +14,7 @@ This library was developed with utility functions useful in my MLP library.
       MLMatrix M(rows, cols, value);
     Create a random matrix, values between min and max
       MLMatrix M(rows, cols, min, max);
-    Create a new matrix, copied from another one
+    Create an empty matrix, same size as another one
       MLMatrix M(A);
     Create a new matrix, same size as another one, filled with a constant value
       MLMatrix M(A, value);
