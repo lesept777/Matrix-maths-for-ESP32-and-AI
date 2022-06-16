@@ -8,26 +8,29 @@ This library was developed with utility functions useful in my MLP library.
 
 ## Constructors
 
+	You must specify the type: float, int, uint8_t, etc. Change `T` below with the chosen type.
     Create an empty matrix (container)
-      MLMatrix M();
+      MLMatrix<T> M();
+	  For example `MLMatrix<float> M();`
     Create a constant matrix, size rows, cols, value is zero by default
-      MLMatrix M(rows, cols, value);
+      MLMatrix<T> M(rows, cols, value);
     Create a random matrix, values between min and max
-      MLMatrix M(rows, cols, min, max);
+      MLMatrix<T> M(rows, cols, min, max);
     Create an empty matrix, same size as another one
-      MLMatrix M(A);
+      MLMatrix<T> M(A);
+	To copy a matrix just type: `MLMatrix<T> M = A;`
     Create a new matrix, same size as another one, filled with a constant value
-      MLMatrix M(A, value);
+      MLMatrix<T> M(A, value);
     Create a matrix from a C++ vector V, the content of the matrix is the same as the vector's
-      MLMatrix M(V);
+      MLMatrix<T>M(V);
     Create a matrix from a C++ vector V of vectors, each vector is a row of the matrix
-      MLMatrix M(V);
+      MLMatrix<T> M(V);
     Create a matrix from an array A of size s, the content of the matrix is the same as the array's
-      MLMatrix M(A, s);
+      MLMatrix<T> M(A, s);
     Create a constant vector
-      MLMatrix M(value, rows);
+      MLMatrix<T> M(value, rows);
     Create identity matrix
-      Id (size);
+      Id<T> (size);
 
 
 ## Operations
