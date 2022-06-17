@@ -31,6 +31,10 @@ This library was developed with utility functions useful in my MLP library.
       MLMatrix<T> M(value, rows);
     Create identity matrix
       Id<T> (size);
+```
+MLMatrix<int> mat = Id<int>(4);
+MLMatrix<float> mat = Id<float>(4);
+```
 
 
 ## Operations
@@ -189,3 +193,17 @@ To apply a random change to the values of a matrix: `M.randomChange(amplitude)` 
 - Set a column to a constant value: `M.setcol(colNumber, value)`
 - Replace a row with values from a 1D matrix: `M.setRowMat(rowNumber, Matrix1D)`
 - Replace a column with values from a 1D matrix: `M.setColMat(colNumber, Matrix1D)`
+
+### Apply a function to the elements of a matrix
+Apply a given function to the elements of a matrix (element-wise)
+The function must be written as: `T function(T x) { ... }`
+For example : `int plusOne (int x) { return x+1; }`
+
+Usage:
+```
+MLMatrix<int> a(10, 50, 0, 10); // define the first matrix
+a.applySelf( &function ); // changes the matrix
+MLMatrix<int> b = a.apply( &function ); // does not change the matrix
+```
+
+To square all the elements of a matrix, use: `M = A.square();`
